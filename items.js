@@ -240,14 +240,18 @@ function ItemDAO(database) {
          *
          */
 
-        var item = this.createDummyItem();
+        //      var item = this.createDummyItem();
 
+        this.db.collection("item").find({ _id: itemId })
+            .toArray(function (err, pageItems) {
+                callback(pageItems[0]);
+            });
         // TODO-lab3 Replace all code above (in this method).
 
         // TODO Include the following line in the appropriate
         // place within your code to pass the matching item
         // to the callback.
-        callback(item);
+        //        callback(item);
     }
 
 
@@ -285,15 +289,29 @@ function ItemDAO(database) {
             date: Date.now()
         }
 
+        this.db.collection("item").updateOne({ _id: itemId },
+            {
+                $push: {
+                    reviews: {
+                        stars: stars,
+                        date: Date.now(),
+                        name: name,
+                        comment: comment
+                    }
+                }
+            }, function (err, count, doc) {
+                callback(doc);
+            });
+
         // TODO replace the following two lines with your code that will
         // update the document with a new review.
-        var doc = this.createDummyItem();
-        doc.reviews = [reviewDoc];
+        //var doc = this.createDummyItem();
+        //doc.reviews = [reviewDoc];
 
         // TODO Include the following line in the appropriate
         // place within your code to pass the updated doc to the
         // callback.
-        callback(doc);
+        //callback(doc);
     }
 
 
